@@ -11,7 +11,7 @@ import json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-RUNTIME = ["prelude.js", "dom.js", "term.js", "main.js"]
+RUNTIME = ["prelude.js", "dom.js", "term.js", "panel.js", "main.js"]
 
 
 def main():

@@ -21,22 +21,23 @@ Q := asciiverse/quickjs
 QSRC := $(Q)/quickjs.c $(Q)/libregexp.c $(Q)/libunicode.c $(Q)/dtoa.c $(Q)/quickjs-libc.c
 QDEFS := -D_GNU_SOURCE -DCONFIG_VERSION=\"0.17.0\"
 B := build
+MOD := $(subst -,_,$(NAME))
 
 all: out/$(NAME)$(EXE)
 
-$(B)/$(NAME).mjs: asciiverse/build.py asciiverse/game.js $(wildcard asciiverse/rotty/*.js) index.html $(wildcard js/*.js) fish.txt
+$(B)/$(MOD).mjs: asciiverse/build.py asciiverse/game.js $(wildcard asciiverse/rotty/*.js) index.html $(wildcard js/*.js) fish.txt
 	python3 asciiverse/build.py $@ $(VERSION)
 
 $(B)/qjsc: $(Q)/qjsc.c $(QSRC)
 	mkdir -p $(B)
 	$(HOSTCC) -O2 $(QDEFS) -o $@ $(Q)/qjsc.c $(QSRC) -lm -lpthread
 
-$(B)/$(NAME).c: $(B)/$(NAME).mjs $(B)/qjsc
-	$(B)/qjsc -e -m -N $(NAME) -o $@ $(B)/$(NAME).mjs
+$(B)/$(MOD).c: $(B)/$(MOD).mjs $(B)/qjsc
+	$(B)/qjsc -e -m -N $(MOD) -o $@ $(B)/$(MOD).mjs
 
-out/$(NAME)$(EXE): $(B)/$(NAME).c $(QSRC)
+out/$(NAME)$(EXE): $(B)/$(MOD).c $(QSRC)
 	mkdir -p out
-	$(CC) $(CFLAGS) $(QDEFS) -I$(Q) $(LDFLAGS) -o $@ $(B)/$(NAME).c $(QSRC) -lm -lpthread
+	$(CC) $(CFLAGS) $(QDEFS) -I$(Q) $(LDFLAGS) -o $@ $(B)/$(MOD).c $(QSRC) -lm -lpthread
 
 clean:
 	rm -rf $(B) out

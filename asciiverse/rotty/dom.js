@@ -244,24 +244,28 @@ DOM.matches = function (el, part) {
     }
     return true;
 };
+// descendants of root matching a selector; as in a browser, the parts before
+// the last may match any ancestor, root and above included
 DOM.query = function (root, sel, first) {
     var out = [];
-    sel.split(",").forEach(function (one) {
-        var parts = one.trim().split(/\s+/);
-        var walk = function (n, depth) {
-            for (var i = 0; i < n.childNodes.length; i++) {
-                var c = n.childNodes[i];
-                if (c.nodeType != 1) continue;
-                var d = depth;
-                if (DOM.matches(c, parts[d])) {
-                    if (d == parts.length - 1) { if (out.indexOf(c) == -1) out.push(c); }
-                    else d++;
-                }
-                walk(c, d);
-            }
-        };
-        walk(root, 0);
-    });
+    var groups = sel.split(",").map(function (one) { return one.trim().split(/\s+/); });
+    var fits = function (el, parts) {
+        if (!DOM.matches(el, parts[parts.length - 1])) return false;
+        var i = parts.length - 2, a = el.parentNode;
+        while (i >= 0 && a) { if (DOM.matches(a, parts[i])) i--; a = a.parentNode; }
+        return i < 0;
+    };
+    var walk = function (n) {
+        for (var i = 0; i < n.childNodes.length; i++) {
+            var c = n.childNodes[i];
+            if (c.nodeType != 1) continue;
+            for (var g = 0; g < groups.length; g++) if (fits(c, groups[g])) { out.push(c); break; }
+            if (first && out.length) return;
+            walk(c);
+            if (first && out.length) return;
+        }
+    };
+    walk(root);
     if (first) return out[0] || null;
     out.item = function (i) { return this[i]; };
     return out;
