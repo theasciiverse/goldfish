@@ -47,8 +47,8 @@ rot.js paints that grid onto a canvas; here the canvas is the terminal.
 - **Keys:** arrows, the numpad, vim keys as in the browser; the digits
   1 to 9 also walk, like the numpad (the inventory's number picks still get
   their keypress). Ctrl+C or Ctrl+Q quits.
-- **A new game after dying:** the game asks to reload the page; here R
-  starts a new game (the program starts itself again), Ctrl+Q quits.
+- **A new game at the end:** after dying, or after the last wish, the game
+  asks to reload the page; here R starts a new game (the program starts itself again), Ctrl+Q quits.
 - **Session log:** `goldfish.log` in the state folder
   (`$XDG_STATE_HOME/goldfish`, `~/.local/state/goldfish`, Application
   Support on macOS, `%LOCALAPPDATA%` on Windows). `GOLDFISH_LOG=debug`

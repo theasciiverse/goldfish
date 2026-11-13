@@ -90,9 +90,10 @@ GAME.layout = function () {
         }
     }
     var sx = W >= c.cols ? 0 : v.x;
-    TERM.blit(c, ox, 0, sx, 0, vw, top);
+    // messages and status from their left edge; only the lake scrolls sideways
+    TERM.blit(c, ox, 0, 0, 0, vw, top);
     TERM.blit(c, ox, top, sx, top + v.y, vw, vh);
-    TERM.blit(c, ox, top + vh, sx, top + mid, vw, bottom);
+    TERM.blit(c, ox, top + vh, 0, top + mid, vw, bottom);
 };
 
 GAME.snapshot = function () {
@@ -102,8 +103,9 @@ GAME.snapshot = function () {
         " level=" + (Game.level && Game.level.constructor && Game.level.constructor.name || "-");
 };
 
-// When the fish dies the game asks to reload the page; here R starts a new
-// game (the program starts itself again) and Ctrl+Q quits
+// When the fish dies, or every wish is granted, the game asks to reload the
+// page; here R starts a new game (the program starts itself again) and
+// Ctrl+Q quits
 GAME.dead = false;
 GAME.ready = function () {
     var over = Game.over;
@@ -115,5 +117,6 @@ GAME.ready = function () {
     };
 };
 GAME.onKey = function (e) {
-    if (GAME.dead && (e.key == "r" || e.key == "R")) { MAIN.reload(); return false; }
+    var won = typeof Progress != "undefined" && typeof Rules != "undefined" && Progress.questsFinished >= Rules.QUESTS;
+    if ((GAME.dead || won) && (e.key == "r" || e.key == "R")) { MAIN.reload(); return false; }
 };
