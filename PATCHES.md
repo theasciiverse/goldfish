@@ -31,6 +31,9 @@ rot.js paints that grid onto a canvas; here the canvas is the terminal.
     `keyup` with the keyCodes rot.js games test (`ROT.VK_*`).
   - `prelude.js`: QuickJS's modules, timers and a console that writes to
     the log, never over the screen.
+  - `web.js`: the newer parts of the browser, for Ondřej's later games
+    (custom elements, dialogs, tables, `element.animate`, `fetch`); not
+    needed by Goldfish, kept so rotty is the same in every game.
 - `asciiverse/game.js`: Goldfish's layout. The title page is index.html's
   own text, centred, with its blinking line and the waves' colours. At
   100x36 or larger the display is shown whole; smaller, the messages stay
